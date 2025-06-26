@@ -29,6 +29,13 @@ def main():
         banner = f"[cyan]{res['banner']}[/]" if res['banner'] else "[grey]N/A[/]"
         console.print(f"Port {res['port']:>5}: {status} | {banner}")
     
+    open_ports = [res['port'] for res in results if res['status'] == 'open']
+    if open_ports:
+        console.print("\n[bold green]Daftar Port Terbuka:[/]")
+        console.print(", ".join(map(str, open_ports)))
+    else:
+        console.print("\n[bold red]Tidak ada port yang terbuka.[/]")
+    
     if Prompt.ask("\n[bold yellow]Simpan hasil ke file? (y/n)[/]") == 'y':
         save_results(host, results)
         console.print("[bold green]Hasil disimpan![/]")
