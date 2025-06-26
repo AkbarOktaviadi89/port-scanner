@@ -23,11 +23,17 @@ def main():
     scanner = PortScanner(host, ports)
     results = scanner.scan()
 
-    console.print("\n[bold green]Hasil Pemindaian:[/]")
-    for res in results:
-        status = "🟢 Open" if res['status'] == 'open' else "🔴 Closed"
-        banner = f"[cyan]{res['banner']}[/]" if res['banner'] else "[grey]N/A[/]"
-        console.print(f"Port {res['port']:>5}: {status} | {banner}")
+    open_ports = sorted([res for res in results if res['status'] == 'open'], key=lambda x: x['port'])
+
+    if open_ports:
+        console.rule("[bold green] Open Ports Summary [/]")
+        for res in open_ports:
+            port = res['port']
+            banner = res['banner'].strip() or "No banner"
+            console.print(f"[green]Port {port:>5} is OPEN[/] ➜ [cyan]{banner}[/]")
+    else:
+        console.print("\n[bold red]No open ports found.[/]")
+
     
     open_ports = [res['port'] for res in results if res['status'] == 'open']
     if open_ports:
